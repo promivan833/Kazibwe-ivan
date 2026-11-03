@@ -143,3 +143,17 @@ body.light-theme .video-work-card,body.light-theme .video-portfolio-intro,body.l
 body.light-theme .video-portfolio-intro strong,body.light-theme .video-portfolio-note strong{color:#0b1725}
 @media(max-width:760px){.video-work-grid{grid-template-columns:1fr 1fr}.video-portfolio-note{align-items:flex-start;flex-direction:column}}
 @media(max-width:480px){.video-work-grid{grid-template-columns:1fr}.video-placeholder{min-height:210px}}
+
+
+/* Frequently asked questions */
+.faq-section{background:linear-gradient(180deg,#03111f,#041827);border-top:1px solid var(--line)}
+.faq-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:28px}
+.faq-grid details{padding:19px 21px;border:1px solid var(--line);border-radius:13px;background:rgba(5,29,48,.72)}
+.faq-grid summary{position:relative;padding-right:28px;cursor:pointer;list-style:none;color:var(--text);font-family:"Space Grotesk";font-size:15px;font-weight:700}
+.faq-grid summary::-webkit-details-marker{display:none}
+.faq-grid summary:after{content:"+";position:absolute;right:0;top:-3px;color:var(--cyan);font-size:22px;font-weight:500}
+.faq-grid details[open] summary:after{content:"−"}
+.faq-grid details p{margin:13px 0 0;color:#91a8bb;font-size:13px;line-height:1.7}
+body.light-theme .faq-grid details{background:#fff}
+body.light-theme .faq-grid details p{color:#506275}
+@media(max-width:650px){.faq-grid{grid-template-columns:1fr}.faq-grid details{padding:17px}}
