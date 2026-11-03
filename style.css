@@ -93,3 +93,23 @@ body.light-theme{--bg:#f4f9ff;--bg2:#eef6ff;--surface:#fff;--surface2:#edf7ff;--
 .process-grid p{margin:0;color:#91a8bb;font-size:12px;line-height:1.65}
 @media(max-width:850px){.process-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.showcase-grid{grid-template-columns:1fr}.showcase-preview{height:230px}.process-grid{grid-template-columns:1fr}.showcase-section{padding-top:60px;padding-bottom:60px}}
+
+
+/* Mobile navigation overlay fix */
+@media (max-width:760px){
+  .site-header{
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+  .site-nav{
+    z-index:1000;
+    background:#03111f;
+    opacity:1;
+    isolation:isolate;
+  }
+  .site-nav a{
+    position:relative;
+    z-index:1;
+    color:#f5f9ff;
+  }
+}
