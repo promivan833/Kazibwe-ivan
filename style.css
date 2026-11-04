@@ -157,3 +157,19 @@ body.light-theme .video-portfolio-intro strong,body.light-theme .video-portfolio
 body.light-theme .faq-grid details{background:#fff}
 body.light-theme .faq-grid details p{color:#506275}
 @media(max-width:650px){.faq-grid{grid-template-columns:1fr}.faq-grid details{padding:17px}}
+
+
+/* Keyboard accessibility and reduced-motion preferences */
+:where(a,button,summary,[tabindex]):focus-visible{
+  outline:3px solid var(--cyan);
+  outline-offset:4px;
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    scroll-behavior:auto!important;
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
