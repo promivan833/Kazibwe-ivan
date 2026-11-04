@@ -18,15 +18,29 @@ document.querySelectorAll('.site-nav a').forEach(link => {
   });
 });
 
-themeToggle?.addEventListener('click', () => {
-  document.body.classList.toggle('light-theme');
-  const light = document.body.classList.contains('light-theme');
+const applyTheme = (light) => {
+  document.body.classList.toggle('light-theme', light);
+  if (!themeToggle) return;
   themeToggle.textContent = light ? '☀' : '☾';
-  localStorage.setItem('ivan-theme', light ? 'light' : 'dark');
+  themeToggle.setAttribute('aria-pressed', String(light));
+  themeToggle.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+  themeToggle.title = light ? 'Switch to dark theme' : 'Switch to light theme';
+};
+
+themeToggle?.addEventListener('click', () => {
+  const light = !document.body.classList.contains('light-theme');
+  applyTheme(light);
+  try {
+    localStorage.setItem('ivan-theme', light ? 'light' : 'dark');
+  } catch {
+    // Theme switching still works when browser storage is unavailable.
+  }
 });
-if (localStorage.getItem('ivan-theme') === 'light') {
-  document.body.classList.add('light-theme');
-  if (themeToggle) themeToggle.textContent = '☀';
+
+try {
+  applyTheme(localStorage.getItem('ivan-theme') === 'light');
+} catch {
+  applyTheme(false);
 }
 
 const sections = [...document.querySelectorAll('main section[id]')];
