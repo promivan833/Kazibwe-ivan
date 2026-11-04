@@ -77,8 +77,10 @@ lightbox?.addEventListener('click', e => { if (e.target === lightbox) closeLight
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   closeLightbox();
+  const menuWasOpen = nav?.classList.contains('open');
   nav?.classList.remove('open');
   document.body.classList.remove('menu-open');
   menuToggle?.setAttribute('aria-expanded', 'false');
   menuToggle?.setAttribute('aria-label', 'Open menu');
+  if (menuWasOpen) menuToggle?.focus();
 });
