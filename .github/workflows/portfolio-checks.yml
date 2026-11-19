@@ -1,0 +1,88 @@
+name: Portfolio checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  static-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check JavaScript syntax
+        run: node --check script.js
+
+      - name: Validate HTML references and structure
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+          import sys
+
+          root = Path(".")
+          html = (root / "index.html").read_text(encoding="utf-8")
+          class Audit(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.ids = []
+                  self.refs = []
+                  self.anchors = []
+                  self.errors = []
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if "id" in attrs:
+                      self.ids.append(attrs["id"])
+                  for key in ("src", "href"):
+                      value = attrs.get(key, "")
+                      if not value:
+                          continue
+                      if value.startswith("#"):
+                          self.anchors.append(value[1:])
+                      elif not re.match(r"^(https?:|mailto:|tel:|data:|javascript:)", value, re.I):
+                          self.refs.append(value.split("#", 1)[0].split("?", 1)[0])
+
+          audit = Audit()
+          audit.feed(html)
+          duplicates = sorted({item for item in audit.ids if audit.ids.count(item) > 1})
+          missing = sorted({ref for ref in audit.refs if ref and not (root / ref).is_file()})
+          missing_anchors = sorted(set(audit.anchors) - set(audit.ids))
+          if duplicates or missing or missing_anchors:
+              print({"duplicate_ids": duplicates, "missing_files": missing, "missing_anchors": missing_anchors})
+              sys.exit(1)
+          if not html.lstrip().lower().startswith("<!doctype html>"):
+              raise SystemExit("Missing HTML5 doctype")
+          if "Kazibwe Ivan" not in html:
+              raise SystemExit("Expected site identity not found")
+          print("HTML structure, IDs, anchors and local asset references passed.")
+          PY
+
+      - name: Check CSS syntax balance and obsolete handlers
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          css = Path("style.css").read_text(encoding="utf-8")
+          js = Path("script.js").read_text(encoding="utf-8")
+          depth = 0
+          for char in css:
+              if char == "{":
+                  depth += 1
+              elif char == "}":
+                  depth -= 1
+              if depth < 0:
+                  raise SystemExit("CSS has an unexpected closing brace")
+          if depth:
+              raise SystemExit("CSS braces are unbalanced")
+          if "gallery-item" in js or "lightbox" in js:
+              raise SystemExit("Obsolete gallery/lightbox JavaScript remains")
+          if "body.light-theme .site-nav" not in css:
+              raise SystemExit("Light-theme mobile navigation contrast rule is missing")
+          print("CSS brace balance and JavaScript cleanup passed.")
+          PY
