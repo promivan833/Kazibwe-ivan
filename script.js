@@ -118,6 +118,7 @@ inquiryForm?.addEventListener('submit', event => {
     'Project details: ' + details
   ].join('\n');
   const whatsappUrl = 'https://wa.me/256704084962?text=' + encodeURIComponent(message);
-  if (status) status.textContent = 'Opening WhatsApp. Review your message and press Send when ready.';
-  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  if (status) status.textContent = 'Redirecting to WhatsApp. If it does not open, use the WhatsApp link below.';
+  // Same-tab navigation is more reliable on mobile browsers that block pop-up tabs.
+  window.location.href = whatsappUrl;
 });
