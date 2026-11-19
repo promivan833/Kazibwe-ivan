@@ -96,6 +96,15 @@ if ('IntersectionObserver' in window) {
 
 
 
+document.querySelectorAll('.back-to-top').forEach(link => {
+  link.addEventListener('click', event => {
+    event.preventDefault();
+    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+    history.replaceState(null, '', '#top');
+  });
+});
+
 const inquiryForm = document.querySelector('#project-inquiry-form');
 inquiryForm?.addEventListener('submit', event => {
   event.preventDefault();
