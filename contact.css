@@ -172,3 +172,10 @@ body.dark-mode .card-icon.instagram { background: #48283a; color: #ff8ab5; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+/* Keep keyboard navigation visible on the contact page. */
+:where(a, button):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
