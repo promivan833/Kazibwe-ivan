@@ -56,12 +56,39 @@ try {
 
 const sections = [...document.querySelectorAll('main section[id]')];
 const navLinks = [...document.querySelectorAll('.site-nav a')];
-const updateActiveNav = () => {
-  const y = window.scrollY + 110;
-  let current = 'top';
-  for (const section of sections) if (section.offsetTop <= y) current = section.id;
-  navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${current}` || (current === 'top' && link.getAttribute('href') === '#top')));
+
+const setActiveSection = (id) => {
+  navLinks.forEach(link => {
+    const active = link.getAttribute('href') === `#${id}`;
+    link.classList.toggle('active', active);
+  });
 };
-window.addEventListener('scroll', updateActiveNav, {passive:true});
-updateActiveNav();
+
+if ('IntersectionObserver' in window) {
+  const sectionObserver = new IntersectionObserver((entries) => {
+    const visible = entries
+      .filter(entry => entry.isIntersecting)
+      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    if (visible.length) setActiveSection(visible[0].target.id);
+  }, {
+    root: null,
+    rootMargin: '-110px 0px -72% 0px',
+    threshold: 0
+  });
+  sections.forEach(section => sectionObserver.observe(section));
+} else {
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(() => {
+      let current = 'top';
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= 110) current = section.id;
+      }
+      setActiveSection(current);
+      ticking = false;
+    });
+  }, {passive:true});
+}
 
