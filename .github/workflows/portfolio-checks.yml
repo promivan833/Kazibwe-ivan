@@ -54,9 +54,10 @@ jobs:
           required = (
               "nav.inert = mobile && !open",
               "nav.setAttribute('aria-hidden', String(mobile && !open))",
-              "nav.querySelector('a[href]')?.focus()",
+              "nav.querySelector('a[href]')?.focus({ preventScroll: true })",
               "menuToggle.focus()",
               "event.key === 'Escape'",
+              "window.matchMedia('(max-width: 1100px)')",
               "mobileMenuQuery.addEventListener",
           )
           missing = [item for item in required if item not in js]
@@ -91,7 +92,7 @@ jobs:
             const nav = page.locator('.site-nav');
             await menu.click();
             if (await menu.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile menu did not open');
-            await page.waitForFunction(() => document.activeElement?.tagName === 'A' && !!document.activeElement.closest('.site-nav'));
+            await page.waitForFunction(() => document.activeElement?.tagName === 'A' && !!document.activeElement.closest('.site-nav'), null, { timeout: 5000 });
             if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) {
               throw new Error('Opening the mobile menu did not focus its first navigation link');
             }
@@ -109,7 +110,12 @@ jobs:
 
             await page.setViewportSize({ width: 900, height: 900 });
             await page.reload({ waitUntil: 'networkidle' });
-            if (await nav.evaluate(el => el.inert)) throw new Error('Navigation is incorrectly inert at tablet width');
+            if (await nav.evaluate(el => el.inert) !== true) throw new Error('Closed tablet drawer is not inert');
+            await menu.click();
+            if (await menu.getAttribute('aria-expanded') !== 'true') throw new Error('Tablet drawer did not open');
+            await page.waitForFunction(() => document.activeElement?.tagName === 'A' && !!document.activeElement.closest('.site-nav'));
+            await page.keyboard.press('Escape');
+            if (await menu.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close tablet drawer');
             await page.setViewportSize({ width: 1280, height: 900 });
             await page.reload({ waitUntil: 'networkidle' });
             if (await nav.evaluate(el => el.inert)) throw new Error('Desktop navigation incorrectly remains inert');
