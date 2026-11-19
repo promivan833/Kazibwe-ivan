@@ -30,11 +30,11 @@ if (nav && menuToggle) {
     const opening = !nav.classList.contains('open');
     setMenuOpen(opening, { moveFocus: false });
     if (opening && mobileMenuQuery.matches) {
-      queueMicrotask(() => {
+      window.setTimeout(() => {
         if (nav.classList.contains('open') && mobileMenuQuery.matches) {
           nav.querySelector('a[href]')?.focus({ preventScroll: true });
         }
-      });
+      }, 0);
     }
   });
 
