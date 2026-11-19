@@ -29,13 +29,6 @@ if (nav && menuToggle) {
   menuToggle.addEventListener('click', () => {
     const opening = !nav.classList.contains('open');
     setMenuOpen(opening, { moveFocus: false });
-    if (opening && mobileMenuQuery.matches) {
-      window.setTimeout(() => {
-        if (nav.classList.contains('open') && mobileMenuQuery.matches) {
-          nav.querySelector('a[href]')?.focus({ preventScroll: true });
-        }
-      }, 0);
-    }
   });
 
   nav.querySelectorAll('a').forEach(link => {
