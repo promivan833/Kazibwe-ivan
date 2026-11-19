@@ -54,7 +54,7 @@ jobs:
           required = (
               "nav.inert = mobile && !open",
               "nav.setAttribute('aria-hidden', String(mobile && !open))",
-              "nav.querySelector('a')?.focus()",
+              "nav.querySelector('a[href]')?.focus()",
               "menuToggle.focus()",
               "event.key === 'Escape'",
               "mobileMenuQuery.addEventListener",
