@@ -65,6 +65,58 @@ jobs:
           print("Mobile navigation inert state, accessibility visibility, focus management and Escape handling passed.")
           PY
 
+
+      - name: Run real-browser navigation and accessibility checks
+        run: |
+          npm install --no-save playwright @axe-core/playwright
+          npx playwright install --with-deps chromium
+          python -m http.server 8000 > /tmp/portfolio-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill $SERVER_PID' EXIT
+          node <<'JS'
+          const { chromium } = require('playwright');
+          const AxeBuilder = require('@axe-core/playwright').default;
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+            const pageErrors = [];
+            page.on('pageerror', error => pageErrors.push(error.message));
+            await page.goto('http://127.0.0.1:8000/', { waitUntil: 'networkidle' });
+
+            const menu = page.locator('.menu-toggle');
+            const nav = page.locator('.site-nav');
+            await menu.click();
+            if (await menu.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile menu did not open');
+            if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) {
+              throw new Error('Opening the mobile menu did not focus its first navigation link');
+            }
+            await page.keyboard.press('Escape');
+            if (await menu.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close mobile menu');
+            if (await page.evaluate(() => document.activeElement?.classList.contains('menu-toggle') !== true)) {
+              throw new Error('Closing the mobile menu did not restore focus to its button');
+            }
+            if (await nav.evaluate(el => el.inert) !== true) throw new Error('Closed mobile menu is not inert');
+
+            const homeAxe = await new AxeBuilder({ page }).analyze();
+            const homeSerious = homeAxe.violations.filter(v => ['serious', 'critical'].includes(v.impact));
+            console.log('Homepage axe violations:', homeAxe.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })));
+            if (homeSerious.length) throw new Error('Homepage has serious/critical accessibility violations');
+
+            await page.setViewportSize({ width: 1280, height: 900 });
+            await page.reload({ waitUntil: 'networkidle' });
+            if (await nav.evaluate(el => el.inert)) throw new Error('Desktop navigation incorrectly remains inert');
+
+            await page.goto('http://127.0.0.1:8000/contact.html', { waitUntil: 'networkidle' });
+            const contactAxe = await new AxeBuilder({ page }).analyze();
+            const contactSerious = contactAxe.violations.filter(v => ['serious', 'critical'].includes(v.impact));
+            console.log('Contact page axe violations:', contactAxe.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })));
+            if (contactSerious.length) throw new Error('Contact page has serious/critical accessibility violations');
+            if (pageErrors.length) throw new Error('Browser JavaScript errors: ' + pageErrors.join('; '));
+            await browser.close();
+            console.log('Real-browser mobile navigation, desktop navigation and accessibility checks passed.');
+          })().catch(error => { console.error(error); process.exit(1); });
+          JS
+
       - name: Check contact page JavaScript syntax
         run: node --check contact.js
 
