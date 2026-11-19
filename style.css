@@ -442,21 +442,88 @@ body.light-theme .inquiry-form select option{background:#fff;color:#172638}
 @media(max-width:760px){.case-study,.inquiry-panel{grid-template-columns:1fr}.case-study-link{grid-column:auto}}
 
 
-/* Contact-card layout reused from the dedicated Let's Connect page. */
-.connect-card-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
-.connect-card{min-width:0;min-height:225px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px 16px 20px;text-align:center;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(7,34,56,.9),rgba(3,15,27,.96));transition:transform .2s,border-color .2s,background .2s}
-.connect-card:hover{transform:translateY(-4px);border-color:var(--cyan);background:rgba(8,42,68,.9)}
-.connect-icon{width:50px;height:50px;display:grid;place-items:center;margin-bottom:14px;border-radius:15px;background:rgba(0,154,255,.12);color:var(--cyan);font-size:22px;font-weight:800}
+/* Compact 1–2–4 contact-card arrangement on the homepage. */
+.connect-card-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  max-width:900px;
+  margin:0 auto;
+}
+.connect-card{
+  min-width:0;
+  min-height:156px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  padding:15px 10px 13px;
+  text-align:center;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(7,34,56,.9),rgba(3,15,27,.96));
+  transition:transform .2s,border-color .2s,background .2s;
+}
+.connect-card:nth-child(1){grid-column:2 / span 2;}
+.connect-card:nth-child(2){grid-column:1 / span 2;}
+.connect-card:nth-child(3){grid-column:3 / span 2;}
+.connect-card:nth-child(n+4){grid-column:span 1;}
+.connect-card:hover{
+  transform:translateY(-3px);
+  border-color:var(--cyan);
+  background:rgba(8,42,68,.9);
+}
+.connect-icon{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  margin-bottom:8px;
+  border-radius:12px;
+  background:rgba(0,154,255,.12);
+  color:var(--cyan);
+  font-size:18px;
+  font-weight:800;
+}
 .connect-icon.whatsapp{background:rgba(27,155,89,.14);color:#39d58a}
 .connect-icon.tiktok,.connect-icon.x-twitter{background:rgba(255,255,255,.1);color:#fff}
 .connect-icon.facebook{background:rgba(24,119,242,.15);color:#68a4ff}
 .connect-icon.instagram{background:rgba(214,51,132,.14);color:#ff8ab5}
 .connect-icon.email{background:rgba(0,190,255,.13);color:var(--cyan)}
-.connect-card h3{margin:0 0 4px;font-size:16px}
-.connect-card p{min-height:24px;margin:0 0 16px;color:#9bb0c2;font-size:12px;overflow-wrap:anywhere}
-.connect-action{margin-top:auto;min-height:39px;display:inline-flex;align-items:center;justify-content:center;padding:0 17px;border-radius:999px;background:linear-gradient(90deg,#078dff,#0bc9ff);color:#00111f;font-size:11px;font-weight:900}
+.connect-card h3{margin:0 0 3px;font-size:14px}
+.connect-card p{
+  min-height:18px;
+  margin:0 0 9px;
+  color:#9bb0c2;
+  font-size:11px;
+  overflow-wrap:anywhere;
+}
+.connect-action{
+  margin-top:auto;
+  min-height:32px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 13px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#078dff,#0bc9ff);
+  color:#00111f;
+  font-size:10px;
+  font-weight:900;
+}
 .connect-action:hover{filter:brightness(1.08)}
 body.light-theme .connect-card{background:#fff;color:#14283b}
 body.light-theme .connect-card p{color:#52677b}
-@media(max-width:900px){.connect-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:480px){.connect-card-grid{grid-template-columns:1fr}.connect-card{min-height:205px}}
+@media(max-width:900px){
+  .connect-card-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:620px}
+  .connect-card:nth-child(1){grid-column:1 / -1}
+  .connect-card:nth-child(2),.connect-card:nth-child(3){grid-column:span 1}
+  .connect-card:nth-child(n+4){grid-column:span 1}
+}
+@media(max-width:480px){
+  .connect-card-grid{gap:9px}
+  .connect-card{min-height:148px;padding:13px 8px 11px}
+  .connect-card h3{font-size:13px}
+  .connect-card p{font-size:10px}
+  .connect-action{padding:0 10px;font-size:9px}
+}
