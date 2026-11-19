@@ -7,7 +7,7 @@
   <meta name="author" content="Kazibwe Ivan">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <!-- Browser-side security policy. Server-only headers must be configured by the hosting provider. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.clarity.ms https://c.bing.com; base-uri 'self'; object-src 'none'; script-src 'self' https://*.clarity.ms https://c.bing.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; connect-src 'self' https://*.clarity.ms https://c.bing.com; form-action 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' https: data:; connect-src 'self'; form-action 'self'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=()">
   <meta property="og:locale" content="en_UG">
@@ -25,10 +25,7 @@
   <meta name="twitter:image" content="https://promivan833.github.io/Kazibwe-ivan/images/ivan-10.jpg">
   <title>Kazibwe Ivan — Web Developer & Video Editor</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="style.css" as="style">
   <link rel="stylesheet" href="style.css">
   <script type="application/ld+json">
   {
@@ -57,18 +54,11 @@
     }
   }
   </script>
-<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "za05lrrl2g");
-</script>
 </head>
 <body>
   <header class="site-header" id="top">
     <a class="brand" href="#top" aria-label="Kazibwe Ivan home">
-      <img class="brand-mark" src="images/ivan-logo.jpg" alt="Kazibwe Ivan">
+      <img class="brand-mark" src="images/ivan-logo.jpg" alt="Kazibwe Ivan" width="42" height="42" decoding="async" loading="lazy">
       <span class="brand-copy"><strong>Kazibwe Ivan 🇺🇬</strong><small>WEB DEVELOPER · VIDEO EDITOR</small></span>
     </a>
 
