@@ -95,9 +95,9 @@ jobs:
             if (await page.evaluate(() => document.activeElement?.classList.contains('menu-toggle') !== true)) {
               throw new Error('Opening the mobile menu should leave focus on its disclosure button');
             }
-            await page.keyboard.press('Shift+Tab');
+            await page.keyboard.press('Tab');
             if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) {
-              throw new Error('Shift+Tab from the menu button did not enter the open navigation');
+              throw new Error('Tab from the menu button did not enter the open navigation');
             }
             await page.keyboard.press('Escape');
             if (await menu.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close mobile menu');
@@ -117,8 +117,8 @@ jobs:
             await menu.click();
             if (await menu.getAttribute('aria-expanded') !== 'true') throw new Error('Tablet drawer did not open');
             if (await page.evaluate(() => document.activeElement?.classList.contains('menu-toggle') !== true)) throw new Error('Opening tablet drawer should retain focus on its disclosure button');
-            await page.keyboard.press('Shift+Tab');
-            if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) throw new Error('Shift+Tab did not enter tablet navigation');
+            await page.keyboard.press('Tab');
+            if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) throw new Error('Tab did not enter tablet navigation');
             await page.keyboard.press('Escape');
             if (await menu.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close tablet drawer');
             await page.setViewportSize({ width: 1280, height: 900 });
