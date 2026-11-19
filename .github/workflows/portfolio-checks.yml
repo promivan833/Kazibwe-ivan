@@ -16,6 +16,35 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Check contact page, video empty state and 1-2-4 layout
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          home = Path("index.html").read_text(encoding="utf-8")
+          contact = Path("contact.html").read_text(encoding="utf-8")
+          css = Path("style.css").read_text(encoding="utf-8")
+          cards = re.findall(r'<article class="connect-card">', home)
+          assert len(cards) == 7, f"Expected 7 homepage contact cards, found {len(cards)}"
+          for selector in (
+              ".connect-card:nth-child(1){grid-column:4;grid-row:1}",
+              ".connect-card:nth-child(2){grid-column:2;grid-row:2}",
+              ".connect-card:nth-child(3){grid-column:6;grid-row:2}",
+              ".connect-card:nth-child(4){grid-column:1;grid-row:3}",
+              ".connect-card:nth-child(5){grid-column:3;grid-row:3}",
+              ".connect-card:nth-child(6){grid-column:5;grid-row:3}",
+              ".connect-card:nth-child(7){grid-column:7;grid-row:3}",
+          ):
+              assert selector in css, f"Missing 1-2-4 layout rule: {selector}"
+          assert ".video-portfolio-placeholder" in home
+          assert ".video-portfolio-placeholder" in css, "Video portfolio empty-state styling missing"
+          assert "Web Developer <span>|</span> Video Editor" in contact, "Contact page role must match homepage"
+          for marker in ('rel="canonical"', 'property="og:title"', 'property="og:description"', 'name="twitter:card"'):
+              assert marker in contact, f"Contact page SEO metadata missing: {marker}"
+          assert "contact.html" in contact
+          print("Contact page metadata, role consistency, video empty state and exact 1-2-4 card layout passed.")
+          PY
+
       - name: Check JavaScript syntax
         run: node --check script.js
 
