@@ -395,3 +395,9 @@ body.light-theme .site-nav a:hover,
 body.light-theme .site-nav a.active {
   color: #005d91;
 }
+
+
+/* Playable licensed video demonstrations */
+.video-preview{display:block;width:100%;aspect-ratio:16/9;min-height:190px;object-fit:cover;background:#020b16;border:0}
+.video-credit{display:inline-block;margin-top:10px;color:var(--cyan);font-size:11px;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+body.light-theme .video-credit{color:#087bb6}
