@@ -1,7 +1,7 @@
 const menuToggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.site-nav');
 const themeToggle = document.querySelector('.theme-toggle');
-const mobileMenuQuery = window.matchMedia('(max-width: 760px)');
+const mobileMenuQuery = window.matchMedia('(max-width: 1100px)');
 
 const setMenuOpen = (open, { moveFocus = true } = {}) => {
   if (!nav || !menuToggle) return;
@@ -27,7 +27,15 @@ if (nav && menuToggle) {
   setMenuOpen(false, { moveFocus: false });
 
   menuToggle.addEventListener('click', () => {
-    setMenuOpen(!nav.classList.contains('open'));
+    const opening = !nav.classList.contains('open');
+    setMenuOpen(opening, { moveFocus: false });
+    if (opening && mobileMenuQuery.matches) {
+      queueMicrotask(() => {
+        if (nav.classList.contains('open') && mobileMenuQuery.matches) {
+          nav.querySelector('a[href]')?.focus({ preventScroll: true });
+        }
+      });
+    }
   });
 
   nav.querySelectorAll('a').forEach(link => {
