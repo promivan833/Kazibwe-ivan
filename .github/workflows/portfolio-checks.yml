@@ -45,8 +45,25 @@ jobs:
           print("Contact page metadata, role consistency, video empty state and exact 1-2-4 card layout passed.")
           PY
 
-      - name: Check JavaScript syntax
-        run: node --check script.js
+      - name: Check JavaScript syntax and mobile navigation accessibility safeguards
+        run: |
+          node --check script.js
+          python - <<'PY'
+          from pathlib import Path
+          js = Path("script.js").read_text(encoding="utf-8")
+          required = (
+              "nav.inert = mobile && !open",
+              "nav.setAttribute('aria-hidden', String(mobile && !open))",
+              "nav.querySelector('a')?.focus()",
+              "menuToggle.focus()",
+              "event.key === 'Escape'",
+              "mobileMenuQuery.addEventListener",
+          )
+          missing = [item for item in required if item not in js]
+          if missing:
+              raise SystemExit(f"Mobile navigation accessibility safeguards missing: {missing}")
+          print("Mobile navigation inert state, accessibility visibility, focus management and Escape handling passed.")
+          PY
 
       - name: Check contact page JavaScript syntax
         run: node --check contact.js
