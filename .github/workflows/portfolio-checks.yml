@@ -130,7 +130,7 @@ jobs:
             await page.goto('http://127.0.0.1:8000/contact.html', { waitUntil: 'networkidle' });
             const contactAxe = await new AxeBuilder({ page }).analyze();
             const contactSerious = contactAxe.violations.filter(v => ['serious', 'critical'].includes(v.impact));
-            console.log('Contact page axe violations:', contactAxe.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })));
+            console.log('Contact page axe violations:', JSON.stringify(contactAxe.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.map(n => ({ target: n.target, html: n.html, summary: n.failureSummary })) }))));
             if (contactSerious.length) throw new Error('Contact page has serious/critical accessibility violations');
             if (pageErrors.length) throw new Error('Browser JavaScript errors: ' + pageErrors.join('; '));
             await browser.close();
