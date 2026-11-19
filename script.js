@@ -1,7 +1,7 @@
 const menuToggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.site-nav');
 const themeToggle = document.querySelector('.theme-toggle');
-const mobileMenuQuery = window.matchMedia('(max-width: 1100px)');
+const mobileMenuQuery = window.matchMedia('(max-width: 760px)');
 
 const setMenuOpen = (open, { moveFocus = true } = {}) => {
   if (!nav || !menuToggle) return;
@@ -16,7 +16,9 @@ const setMenuOpen = (open, { moveFocus = true } = {}) => {
   nav.setAttribute('aria-hidden', String(mobile && !open));
 
   if (moveFocus && mobile && open) {
-    nav.querySelector('a')?.focus();
+    requestAnimationFrame(() => {
+      if (nav.classList.contains('open') && mobileMenuQuery.matches) nav.querySelector('a[href]')?.focus();
+    });
   } else if (moveFocus && mobile && !open && document.activeElement && nav.contains(document.activeElement)) {
     menuToggle.focus();
   }
