@@ -92,7 +92,9 @@ jobs:
             const nav = page.locator('.site-nav');
             await menu.click();
             if (await menu.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile menu did not open');
-            await page.waitForFunction(() => document.activeElement?.tagName === 'A' && !!document.activeElement.closest('.site-nav'), null, { timeout: 5000 });
+            await page.waitForTimeout(300);
+        console.log('Mobile focus diagnostics:', await page.evaluate(() => ({ activeTag: document.activeElement?.tagName, activeClass: document.activeElement?.className, activeText: document.activeElement?.textContent?.trim(), navInert: document.querySelector('.site-nav')?.inert, navAriaHidden: document.querySelector('.site-nav')?.getAttribute('aria-hidden'), navOpen: document.querySelector('.site-nav')?.classList.contains('open'), navVisibility: getComputedStyle(document.querySelector('.site-nav')).visibility, navTransform: getComputedStyle(document.querySelector('.site-nav')).transform, firstLink: document.querySelector('.site-nav a[href]')?.outerHTML, scriptLoaded: [...document.scripts].map(s => s.src) })));
+        await page.waitForFunction(() => document.activeElement?.tagName === 'A' && !!document.activeElement.closest('.site-nav'), null, { timeout: 1500 });
             if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) {
               throw new Error('Opening the mobile menu did not focus its first navigation link');
             }
