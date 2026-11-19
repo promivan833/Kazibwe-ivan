@@ -502,3 +502,29 @@ body.light-theme .connect-card p{color:#52677b}
   .connect-card p{font-size:9px}
   .connect-action{min-height:28px;padding:0 6px;font-size:8px}
 }
+
+
+/* Empty state for the video portfolio: styled consistently in both themes. */
+.video-portfolio-placeholder{
+  display:grid;
+  place-items:center;
+  min-height:190px;
+  margin:0;
+  padding:clamp(24px,4vw,42px);
+  border:1px dashed rgba(0,190,255,.38);
+  border-radius:16px;
+  background:radial-gradient(circle at 50% 0%,rgba(0,190,255,.12),transparent 58%),linear-gradient(145deg,rgba(7,32,52,.72),rgba(3,14,25,.86));
+  text-align:center;
+}
+.video-portfolio-placeholder p{
+  max-width:620px;
+  margin:0;
+  color:#b4c7d8;
+  font-size:14px;
+  line-height:1.75;
+}
+body.light-theme .video-portfolio-placeholder{
+  border-color:rgba(0,105,170,.3);
+  background:linear-gradient(145deg,#fff,#edf6fc);
+}
+body.light-theme .video-portfolio-placeholder p{color:#465b70}
