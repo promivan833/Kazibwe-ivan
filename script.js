@@ -54,8 +54,10 @@ try {
   applyTheme(false);
 }
 
-const sections = [...document.querySelectorAll('main section[id]')];
 const navLinks = [...document.querySelectorAll('.site-nav a')];
+const navTargets = new Set(navLinks.map(link => link.getAttribute('href')));
+const sections = [...document.querySelectorAll('main section[id]')]
+  .filter(section => navTargets.has(`#${section.id}`));
 
 const setActiveSection = (id) => {
   navLinks.forEach(link => {
