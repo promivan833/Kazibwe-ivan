@@ -109,7 +109,7 @@ jobs:
 
             const homeAxe = await new AxeBuilder({ page }).analyze();
             const homeSerious = homeAxe.violations.filter(v => ['serious', 'critical'].includes(v.impact));
-            console.log('Homepage axe violations:', homeAxe.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.map(n => ({ target: n.target, html: n.html, summary: n.failureSummary })) })));
+            console.log('Homepage axe violations:', JSON.stringify(homeAxe.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.map(n => ({ target: n.target, html: n.html, summary: n.failureSummary })) }))));
             if (homeSerious.length) throw new Error('Homepage has serious/critical accessibility violations');
 
             await page.setViewportSize({ width: 900, height: 900 });
