@@ -19,6 +19,9 @@ jobs:
       - name: Check JavaScript syntax
         run: node --check script.js
 
+      - name: Check contact page JavaScript syntax
+        run: node --check contact.js
+
       - name: Validate HTML references and structure
         run: |
           python - <<'PY'
@@ -79,6 +82,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           css = Path("style.css").read_text(encoding="utf-8")
+          contact_css = Path("contact.css").read_text(encoding="utf-8")
           js = Path("script.js").read_text(encoding="utf-8")
           depth = 0
           for char in css:
@@ -90,6 +94,13 @@ jobs:
                   raise SystemExit("CSS has an unexpected closing brace")
           if depth:
               raise SystemExit("CSS braces are unbalanced")
+          contact_depth = 0
+          for char in contact_css:
+              if char == "{": contact_depth += 1
+              elif char == "}": contact_depth -= 1
+              if contact_depth < 0: raise SystemExit("Contact CSS has an unexpected closing brace")
+          if contact_depth: raise SystemExit("Contact CSS braces are unbalanced")
+          if ":focus-visible" not in contact_css: raise SystemExit("Contact page keyboard focus styling is missing")
           if "gallery-item" in js or "lightbox" in js:
               raise SystemExit("Obsolete gallery/lightbox JavaScript remains")
           if "body.light-theme .site-nav" not in css:
