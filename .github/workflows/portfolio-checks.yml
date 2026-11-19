@@ -225,6 +225,9 @@ jobs:
               assert not missing_anchors, f"{page}: missing fragment targets: {missing_anchors}"
               assert not missing_files, f"{page}: missing local assets/pages: {missing_files}"
               assert not audit.unsafe_blank_links, f"{page}: target=_blank without rel=noopener: {audit.unsafe_blank_links}"
+              if page == "contact.html":
+                  assert 'integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="' in html, "Contact page icon stylesheet is missing its verified SRI hash"
+                  assert 'crossorigin="anonymous"' in html, "Contact page icon stylesheet is missing crossorigin"
               assert "<title>" in html.lower() and "</title>" in html.lower(), f"{page}: missing page title"
               assert 'name="description"' in html, f"{page}: missing meta description"
               assert not re.search(r"Mr[ ]+Kazibwe[ ]+Ivan|MR[ ]+KAZIBWE[ ]+IVAN", html, re.I), f"{page}: outdated personal name prefix remains"
