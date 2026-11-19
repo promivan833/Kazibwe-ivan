@@ -40,14 +40,16 @@ jobs:
                   attrs = dict(attrs)
                   if "id" in attrs:
                       self.ids.append(attrs["id"])
-                  for key in ("src", "href"):
+                  for key in ("src", "href", "srcset"):
                       value = attrs.get(key, "")
                       if not value:
                           continue
-                      if value.startswith("#"):
-                          self.anchors.append(value[1:])
-                      elif not re.match(r"^(https?:|mailto:|tel:|data:|javascript:)", value, re.I):
-                          self.refs.append(value.split("#", 1)[0].split("?", 1)[0])
+                      candidates = [part.strip().split()[0] for part in value.split(",")] if key == "srcset" else [value]
+                      for candidate in candidates:
+                          if candidate.startswith("#"):
+                              self.anchors.append(candidate[1:])
+                          elif not re.match(r"^(https?:|mailto:|tel:|data:|javascript:)", candidate, re.I):
+                              self.refs.append(candidate.split("#", 1)[0].split("?", 1)[0])
 
           audit = Audit()
           audit.feed(html)
@@ -65,9 +67,11 @@ jobs:
               raise SystemExit("External Google Fonts request remains")
           if "clarity.ms/tag/" in html:
               raise SystemExit("Third-party Clarity bootstrap remains")
-          if 'rel="preload" as="image" href="images/ivan-10.jpg"' not in html:
-              raise SystemExit("Hero image preload is missing")
-          print("HTML structure, IDs, anchors, local assets and critical image hints passed.")
+          if 'rel="preload" as="image" href="images/ivan-10-720.webp"' not in html:
+              raise SystemExit("Optimized hero image preload is missing")
+          if "images/ivan-04-640.webp" not in html or "images/ivan-10-480.webp" not in html:
+              raise SystemExit("Responsive WebP image variants are not referenced")
+          print("HTML structure, IDs, anchors, local assets, responsive images and preload passed.")
           PY
 
       - name: Check CSS syntax balance and obsolete handlers
