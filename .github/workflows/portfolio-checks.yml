@@ -106,6 +106,62 @@ jobs:
           print("HTML structure, IDs, anchors, local assets, responsive images and preload passed.")
           PY
 
+
+      - name: Audit both public pages, internal links and external-link safety
+        run: |
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          import re
+
+          root = Path(".")
+          pages = ("index.html", "contact.html")
+
+          class PageAudit(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.ids = []
+                  self.anchors = []
+                  self.local_files = []
+                  self.unsafe_blank_links = []
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  if "id" in attrs:
+                      self.ids.append(attrs["id"])
+                  for key in ("href", "src", "srcset"):
+                      value = attrs.get(key, "")
+                      if not value:
+                          continue
+                      candidates = [part.strip().split()[0] for part in value.split(",")] if key == "srcset" else [value]
+                      for candidate in candidates:
+                          if candidate.startswith("#"):
+                              self.anchors.append(candidate[1:])
+                          elif not re.match(r"^(https?:|mailto:|tel:|data:|javascript:)", candidate, re.I):
+                              local = candidate.split("#", 1)[0].split("?", 1)[0]
+                              if local:
+                                  self.local_files.append(local)
+                  if attrs.get("target") == "_blank":
+                      rel = set(attrs.get("rel", "").lower().split())
+                      if "noopener" not in rel:
+                          self.unsafe_blank_links.append(attrs.get("href", "(missing href)"))
+
+          for page in pages:
+              html = (root / page).read_text(encoding="utf-8")
+              audit = PageAudit()
+              audit.feed(html)
+              duplicates = sorted({item for item in audit.ids if audit.ids.count(item) > 1})
+              missing_anchors = sorted(set(audit.anchors) - set(audit.ids))
+              missing_files = sorted({item for item in audit.local_files if not (root / item).is_file()})
+              assert not duplicates, f"{page}: duplicate IDs: {duplicates}"
+              assert not missing_anchors, f"{page}: missing fragment targets: {missing_anchors}"
+              assert not missing_files, f"{page}: missing local assets/pages: {missing_files}"
+              assert not audit.unsafe_blank_links, f"{page}: target=_blank without rel=noopener: {audit.unsafe_blank_links}"
+              assert re.search(r"<title>\\s*[^<]+</title>", html, re.I), f"{page}: missing page title"
+              assert 'name="description"' in html, f"{page}: missing meta description"
+              assert not re.search(r"Mr\\s+Kazibwe\\s+Ivan|MR\\s+KAZIBWE\\s+IVAN", html, re.I), f"{page}: outdated personal name prefix remains"
+          print("Both public pages: IDs, anchors, local assets, metadata, name consistency and external-link safety passed.")
+          PY
+
       - name: Check CSS syntax balance and obsolete handlers
         run: |
           python - <<'PY'
