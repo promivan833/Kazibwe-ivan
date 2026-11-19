@@ -528,3 +528,8 @@ body.light-theme .video-portfolio-placeholder{
   background:linear-gradient(145deg,#fff,#edf6fc);
 }
 body.light-theme .video-portfolio-placeholder p{color:#465b70}
+
+
+/* Keep visual header order while making Tab move from the menu button into navigation. */
+.site-nav{order:1}
+.header-actions{order:2}
