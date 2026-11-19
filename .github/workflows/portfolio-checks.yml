@@ -61,7 +61,13 @@ jobs:
               raise SystemExit("Missing HTML5 doctype")
           if "Kazibwe Ivan" not in html:
               raise SystemExit("Expected site identity not found")
-          print("HTML structure, IDs, anchors and local asset references passed.")
+          if "fonts.googleapis.com" in html or "fonts.gstatic.com" in html:
+              raise SystemExit("External Google Fonts request remains")
+          if "clarity.ms/tag/" in html:
+              raise SystemExit("Third-party Clarity bootstrap remains")
+          if 'rel="preload" as="image" href="images/ivan-10.jpg"' not in html:
+              raise SystemExit("Hero image preload is missing")
+          print("HTML structure, IDs, anchors, local assets and critical image hints passed.")
           PY
 
       - name: Check CSS syntax balance and obsolete handlers
@@ -84,5 +90,9 @@ jobs:
               raise SystemExit("Obsolete gallery/lightbox JavaScript remains")
           if "body.light-theme .site-nav" not in css:
               raise SystemExit("Light-theme mobile navigation contrast rule is missing")
-          print("CSS brace balance and JavaScript cleanup passed.")
+          if "fonts.googleapis.com" in css or "fonts.gstatic.com" in css:
+              raise SystemExit("External font dependency remains in CSS")
+          if "IntersectionObserver" not in js:
+              raise SystemExit("IntersectionObserver navigation optimization is missing")
+          print("CSS brace balance, system-font setup and scroll optimization passed.")
           PY
