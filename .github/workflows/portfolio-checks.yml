@@ -91,6 +91,7 @@ jobs:
             const nav = page.locator('.site-nav');
             await menu.click();
             if (await menu.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile menu did not open');
+            await page.waitForFunction(() => document.activeElement?.tagName === 'A' && !!document.activeElement.closest('.site-nav'));
             if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) {
               throw new Error('Opening the mobile menu did not focus its first navigation link');
             }
@@ -106,6 +107,9 @@ jobs:
             console.log('Homepage axe violations:', homeAxe.violations.map(v => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })));
             if (homeSerious.length) throw new Error('Homepage has serious/critical accessibility violations');
 
+            await page.setViewportSize({ width: 900, height: 900 });
+            await page.reload({ waitUntil: 'networkidle' });
+            if (await nav.evaluate(el => el.inert)) throw new Error('Navigation is incorrectly inert at tablet width');
             await page.setViewportSize({ width: 1280, height: 900 });
             await page.reload({ waitUntil: 'networkidle' });
             if (await nav.evaluate(el => el.inert)) throw new Error('Desktop navigation incorrectly remains inert');
