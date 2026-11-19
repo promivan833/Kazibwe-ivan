@@ -149,7 +149,7 @@ inquiryForm?.addEventListener('submit', event => {
     'Service: ' + service,
     'Estimated budget: ' + budget,
     'Project details: ' + details
-  ].join('\\n');
+  ].join('\n');
   const whatsappUrl = 'https://wa.me/256704084962?text=' + encodeURIComponent(message);
   if (status) status.textContent = 'Redirecting to WhatsApp. If it does not open, use the WhatsApp link below.';
   window.location.href = whatsappUrl;
