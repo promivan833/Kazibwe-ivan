@@ -382,3 +382,16 @@ body.light-theme .price-btn.outline {
     transition: none;
   }
 }
+
+/* Light-theme mobile drawer contrast */
+body.light-theme .site-nav {
+  background: #f8fbff;
+  border-left-color: rgba(0,105,190,.2);
+}
+body.light-theme .site-nav a {
+  color: #14283b;
+}
+body.light-theme .site-nav a:hover,
+body.light-theme .site-nav a.active {
+  color: #005d91;
+}
