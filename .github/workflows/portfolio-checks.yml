@@ -82,7 +82,8 @@ jobs:
           const AxeBuilder = require('@axe-core/playwright').default;
           (async () => {
             const browser = await chromium.launch({ headless: true });
-            const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+            const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+            const page = await context.newPage();
             const pageErrors = [];
             page.on('pageerror', error => pageErrors.push(error.message));
             await page.goto('http://127.0.0.1:8000/', { waitUntil: 'networkidle' });
