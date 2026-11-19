@@ -94,3 +94,30 @@ if ('IntersectionObserver' in window) {
   }, {passive:true});
 }
 
+
+
+const inquiryForm = document.querySelector('#project-inquiry-form');
+inquiryForm?.addEventListener('submit', event => {
+  event.preventDefault();
+  const formData = new FormData(inquiryForm);
+  const name = String(formData.get('name') || '').trim();
+  const service = String(formData.get('service') || '').trim();
+  const budget = String(formData.get('budget') || 'Not sure yet').trim();
+  const details = String(formData.get('details') || '').trim();
+  const status = document.querySelector('#inquiry-status');
+  if (!name || !service || !details) {
+    if (status) status.textContent = 'Please complete your name, service and project details.';
+    return;
+  }
+  const message = [
+    'Hello Kazibwe Ivan, I would like to discuss a project.',
+    '',
+    'Name: ' + name,
+    'Service: ' + service,
+    'Estimated budget: ' + budget,
+    'Project details: ' + details
+  ].join('\n');
+  const whatsappUrl = 'https://wa.me/256704084962?text=' + encodeURIComponent(message);
+  if (status) status.textContent = 'Opening WhatsApp. Review your message and press Send when ready.';
+  window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+});
