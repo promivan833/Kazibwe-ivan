@@ -16,9 +16,8 @@ const setMenuOpen = (open, { moveFocus = true } = {}) => {
   nav.setAttribute('aria-hidden', String(mobile && !open));
 
   if (moveFocus && mobile && open) {
-    requestAnimationFrame(() => {
-      if (nav.classList.contains('open') && mobileMenuQuery.matches) nav.querySelector('a[href]')?.focus();
-    });
+    // The drawer is already visible and no longer inert; move focus immediately.
+    nav.querySelector('a[href]')?.focus();
   } else if (moveFocus && mobile && !open && document.activeElement && nav.contains(document.activeElement)) {
     menuToggle.focus();
   }
