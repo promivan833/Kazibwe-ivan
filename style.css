@@ -407,3 +407,9 @@ body.light-theme .video-credit{color:#087bb6}
 .skip-link{position:fixed;top:10px;left:10px;z-index:2000;padding:12px 16px;border-radius:8px;background:#fff;color:#061a2b;font-size:14px;font-weight:800;transform:translateY(-160%);transition:transform .18s ease}
 .skip-link:focus{transform:translateY(0)}
 @media(prefers-reduced-motion:reduce){.skip-link{transition:none}}
+
+
+/* Clear section heading without an unnecessary nested wrapper. */
+.about-heading{margin-bottom:38px}
+/* Keep anchored headings clear of the sticky navigation bar. */
+main section[id]{scroll-margin-top:88px}
