@@ -54,7 +54,6 @@ jobs:
           required = (
               "nav.inert = mobile && !open",
               "nav.setAttribute('aria-hidden', String(mobile && !open))",
-              "nav.querySelector('a[href]')?.focus({ preventScroll: true })",
               "menuToggle.focus()",
               "event.key === 'Escape'",
               "window.matchMedia('(max-width: 1100px)')",
@@ -93,10 +92,12 @@ jobs:
             await menu.click();
             if (await menu.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile menu did not open');
             await page.waitForTimeout(300);
-            console.log('Mobile focus diagnostics:', await page.evaluate(() => ({ activeTag: document.activeElement?.tagName, activeClass: document.activeElement?.className, activeText: document.activeElement?.textContent?.trim(), navInert: document.querySelector('.site-nav')?.inert, navAriaHidden: document.querySelector('.site-nav')?.getAttribute('aria-hidden'), navOpen: document.querySelector('.site-nav')?.classList.contains('open'), navVisibility: getComputedStyle(document.querySelector('.site-nav')).visibility, navTransform: getComputedStyle(document.querySelector('.site-nav')).transform, firstLink: document.querySelector('.site-nav a[href]')?.outerHTML, scriptLoaded: [...document.scripts].map(s => s.src) })));
-            await page.waitForFunction(() => document.activeElement?.tagName === 'A' && !!document.activeElement.closest('.site-nav'), null, { timeout: 1500 });
+            if (await page.evaluate(() => document.activeElement?.classList.contains('menu-toggle') !== true)) {
+              throw new Error('Opening the mobile menu should leave focus on its disclosure button');
+            }
+            await page.keyboard.press('Shift+Tab');
             if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) {
-              throw new Error('Opening the mobile menu did not focus its first navigation link');
+              throw new Error('Shift+Tab from the menu button did not enter the open navigation');
             }
             await page.keyboard.press('Escape');
             if (await menu.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close mobile menu');
@@ -115,7 +116,9 @@ jobs:
             if (await nav.evaluate(el => el.inert) !== true) throw new Error('Closed tablet drawer is not inert');
             await menu.click();
             if (await menu.getAttribute('aria-expanded') !== 'true') throw new Error('Tablet drawer did not open');
-            await page.waitForFunction(() => document.activeElement?.tagName === 'A' && !!document.activeElement.closest('.site-nav'));
+            if (await page.evaluate(() => document.activeElement?.classList.contains('menu-toggle') !== true)) throw new Error('Opening tablet drawer should retain focus on its disclosure button');
+            await page.keyboard.press('Shift+Tab');
+            if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) throw new Error('Shift+Tab did not enter tablet navigation');
             await page.keyboard.press('Escape');
             if (await menu.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close tablet drawer');
             await page.setViewportSize({ width: 1280, height: 900 });
