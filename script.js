@@ -62,7 +62,7 @@ const applyTheme = (light) => {
   if (!themeToggle) return;
   themeToggle.textContent = light ? '☀' : '☾';
   themeToggle.setAttribute('aria-pressed', String(light));
-  themeToggle.setAttribute('aria-label', light ? 'Switch to dark theme' : 'Switch to light theme');
+  themeToggle.setAttribute('aria-label', light ? '☀ Switch to dark theme' : '☾ Switch to light theme');
   themeToggle.title = light ? 'Switch to dark theme' : 'Switch to light theme';
 };
 
