@@ -119,6 +119,7 @@ jobs:
             if (await menu.getAttribute('aria-expanded') !== 'true') throw new Error('Tablet drawer did not open');
             if (await page.evaluate(() => document.activeElement?.classList.contains('menu-toggle') !== true)) throw new Error('Opening tablet drawer should retain focus on its disclosure button');
             await page.keyboard.press('Tab');
+            console.log('Tablet focus after Tab:', JSON.stringify(await page.evaluate(() => ({ active: document.activeElement?.outerHTML, navInert: document.querySelector('.site-nav')?.inert, navHidden: document.querySelector('.site-nav')?.getAttribute('aria-hidden'), navOpen: document.querySelector('.site-nav')?.classList.contains('open'), firstLink: document.querySelector('.site-nav a')?.outerHTML, headerChildren: [...document.querySelector('.site-header').children].map(e => e.className) }))));
             if (await page.evaluate(() => document.activeElement?.tagName !== 'A' || !document.activeElement.closest('.site-nav'))) throw new Error('Tab did not enter tablet navigation');
             await page.keyboard.press('Escape');
             if (await menu.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close tablet drawer');
