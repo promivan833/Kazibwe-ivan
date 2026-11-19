@@ -1,0 +1,174 @@
+:root {
+  color-scheme: light;
+  --page: #f3f5f8;
+  --card: #ffffff;
+  --text: #182230;
+  --muted: #687586;
+  --line: #e7ebf0;
+  --accent: #087fbd;
+  --accent-hover: #05699e;
+  --shadow: 0 12px 34px rgba(22, 34, 51, .075);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--page);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  transition: background .25s ease, color .25s ease;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+.theme-toggle {
+  position: fixed;
+  z-index: 5;
+  top: 22px;
+  right: 24px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform .2s ease, background .25s ease;
+}
+.theme-toggle:hover { transform: translateY(-2px); }
+.page-shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 64px 0 30px; }
+.profile-card {
+  max-width: 720px;
+  margin: 0 auto 54px;
+  padding: 34px 28px 30px;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+.profile-picture {
+  display: block;
+  width: 124px;
+  height: 124px;
+  margin: 0 auto 20px;
+  border: 5px solid var(--card);
+  border-radius: 50%;
+  outline: 2px solid #d9e5ee;
+  object-fit: cover;
+  object-position: center 28%;
+  box-shadow: 0 8px 22px rgba(20, 42, 64, .15);
+}
+.eyebrow { margin: 0 0 8px; color: var(--accent); font-size: .72rem; font-weight: 800; letter-spacing: .19em; }
+.profile-card h1 { margin: 0; font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.1; letter-spacing: -.045em; }
+.profile-subtitle { margin: 12px 0 8px; color: var(--muted); font-size: .98rem; font-weight: 600; }
+.profile-subtitle span { padding: 0 5px; color: #aab4c0; }
+.profile-intro { max-width: 510px; margin: 0 auto; color: var(--muted); font-size: .94rem; }
+.contact-section { margin: 0 0 44px; }
+.section-heading { margin: 0 0 18px; }
+.section-heading h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 1.9rem); letter-spacing: -.035em; }
+.card-grid { display: grid; gap: 18px; }
+.direct-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.social-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.contact-card {
+  min-width: 0;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 25px 18px 22px;
+  text-align: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  transition: transform .2s ease, box-shadow .2s ease, background .25s ease;
+}
+.contact-card:hover { transform: translateY(-4px); box-shadow: 0 17px 38px rgba(22, 34, 51, .11); }
+.card-icon {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 15px;
+  border-radius: 16px;
+  background: #edf5fa;
+  color: var(--accent);
+  font-size: 1.55rem;
+}
+.card-icon.whatsapp { background: #e8f8ef; color: #1b9b59; }
+.card-icon.tiktok { background: #f0f0f2; color: #111; }
+.card-icon.facebook { background: #eaf1ff; color: #1877f2; }
+.card-icon.instagram { background: #fff0f5; color: #d63384; }
+.card-icon.x-twitter { background: #edf0f2; color: #111; }
+.contact-card h3 { margin: 0 0 5px; font-size: 1.02rem; }
+.card-handle { display: block; min-height: 24px; margin: 0 0 17px; color: var(--muted); font-size: .87rem; overflow-wrap: anywhere; }
+.action-button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  margin-top: auto;
+  padding: 0 17px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 750;
+  transition: background .2s ease, transform .2s ease;
+}
+.action-button:hover { background: var(--accent-hover); transform: translateY(-1px); }
+.action-button i { font-size: .72rem; }
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  padding: 25px 12px 10px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  text-align: center;
+}
+.footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 25px; }
+.footer-links a { color: var(--text); font-size: .9rem; font-weight: 650; }
+.footer-links a:hover { color: var(--accent); }
+.site-footer p { margin: 0; font-size: .82rem; }
+body.dark-mode {
+  color-scheme: dark;
+  --page: #0c1420;
+  --card: #152233;
+  --text: #edf3f8;
+  --muted: #a4b1c0;
+  --line: #26384c;
+  --accent: #37b8ed;
+  --accent-hover: #159bd5;
+  --shadow: 0 12px 34px rgba(0, 0, 0, .22);
+}
+body.dark-mode .profile-picture { border-color: var(--card); outline-color: #34516b; }
+body.dark-mode .card-icon { background: #20364a; }
+body.dark-mode .card-icon.whatsapp { background: #173b30; color: #65d69a; }
+body.dark-mode .card-icon.tiktok, body.dark-mode .card-icon.x-twitter { background: #27313c; color: #fff; }
+body.dark-mode .card-icon.facebook { background: #1c3458; color: #76a7ff; }
+body.dark-mode .card-icon.instagram { background: #48283a; color: #ff8ab5; }
+@media (max-width: 900px) {
+  .social-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 650px) {
+  .page-shell { width: min(100% - 28px, 520px); padding-top: 82px; }
+  .theme-toggle { top: 16px; right: 16px; }
+  .profile-card { margin-bottom: 38px; padding: 28px 18px 24px; border-radius: 20px; }
+  .profile-picture { width: 112px; height: 112px; }
+  .profile-subtitle { font-size: .86rem; }
+  .direct-grid, .social-grid { grid-template-columns: 1fr; gap: 13px; }
+  .contact-card { min-height: 205px; }
+  .contact-section { margin-bottom: 34px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
