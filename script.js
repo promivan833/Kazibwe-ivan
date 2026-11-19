@@ -1,33 +1,59 @@
 const menuToggle = document.querySelector('.menu-toggle');
 const nav = document.querySelector('.site-nav');
 const themeToggle = document.querySelector('.theme-toggle');
+const mobileMenuQuery = window.matchMedia('(max-width: 1100px)');
 
-const setMenuOpen = (open) => {
+const setMenuOpen = (open, { moveFocus = true } = {}) => {
   if (!nav || !menuToggle) return;
+  const mobile = mobileMenuQuery.matches;
   nav.classList.toggle('open', open);
-  document.body.classList.toggle('menu-open', open);
+  document.body.classList.toggle('menu-open', open && mobile);
   menuToggle.setAttribute('aria-expanded', String(open));
   menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+
+  // Closed mobile navigation must not remain in the keyboard or accessibility tree.
+  nav.inert = mobile && !open;
+  nav.setAttribute('aria-hidden', String(mobile && !open));
+
+  if (moveFocus && mobile && open) {
+    nav.querySelector('a')?.focus();
+  } else if (moveFocus && mobile && !open && document.activeElement && nav.contains(document.activeElement)) {
+    menuToggle.focus();
+  }
 };
 
-menuToggle?.addEventListener('click', () => {
-  setMenuOpen(!nav?.classList.contains('open'));
-});
+if (nav && menuToggle) {
+  setMenuOpen(false, { moveFocus: false });
 
-nav?.querySelectorAll('a').forEach(link => {
-  link.addEventListener('click', () => setMenuOpen(false));
-});
+  menuToggle.addEventListener('click', () => {
+    setMenuOpen(!nav.classList.contains('open'));
+  });
 
-document.addEventListener('keydown', event => {
-  if (event.key === 'Escape' && nav?.classList.contains('open')) {
-    setMenuOpen(false);
-    menuToggle?.focus();
-  }
-});
+  nav.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => setMenuOpen(false));
+  });
 
-window.addEventListener('resize', () => {
-  if (window.innerWidth > 1100) setMenuOpen(false);
-});
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && nav.classList.contains('open')) {
+      setMenuOpen(false);
+      menuToggle.focus();
+    }
+  });
+
+  const syncNavigationMode = () => {
+    if (!mobileMenuQuery.matches) {
+      nav.inert = false;
+      nav.setAttribute('aria-hidden', 'false');
+      setMenuOpen(false, { moveFocus: false });
+    } else if (!nav.classList.contains('open')) {
+      nav.inert = true;
+      nav.setAttribute('aria-hidden', 'true');
+    }
+  };
+
+  window.addEventListener('resize', syncNavigationMode);
+  mobileMenuQuery.addEventListener?.('change', syncNavigationMode);
+}
 
 const applyTheme = (light) => {
   document.body.classList.toggle('light-theme', light);
@@ -94,8 +120,6 @@ if ('IntersectionObserver' in window) {
   }, {passive:true});
 }
 
-
-
 document.querySelectorAll('.back-to-top').forEach(link => {
   link.addEventListener('click', event => {
     event.preventDefault();
@@ -125,9 +149,8 @@ inquiryForm?.addEventListener('submit', event => {
     'Service: ' + service,
     'Estimated budget: ' + budget,
     'Project details: ' + details
-  ].join('\n');
+  ].join('\\n');
   const whatsappUrl = 'https://wa.me/256704084962?text=' + encodeURIComponent(message);
   if (status) status.textContent = 'Redirecting to WhatsApp. If it does not open, use the WhatsApp link below.';
-  // Same-tab navigation is more reliable on mobile browsers that block pop-up tabs.
   window.location.href = whatsappUrl;
 });
