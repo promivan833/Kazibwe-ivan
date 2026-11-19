@@ -63,6 +63,10 @@ jobs:
           if missing:
               raise SystemExit(f"Mobile navigation accessibility safeguards missing: {missing}")
           print("Mobile navigation inert state, accessibility visibility, focus management and Escape handling passed.")
+          expected_join = "].join(" + repr("\n") + ");"
+          if expected_join not in js:
+              raise SystemExit("WhatsApp enquiry message must preserve line breaks")
+          print("WhatsApp enquiry message line-break formatting passed.")
           PY
 
 
